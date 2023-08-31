@@ -9,8 +9,9 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 
 
 bot.start(async (ctx) => {
-    ctx.reply(`Здравствуйте, ${ctx.message.from.first_name ? ctx.message.from.first_name : 'незнакомец'}!`)
+    
     try{
+        await ctx.reply(`Здравствуйте, ${ctx.message.from.first_name ? ctx.message.from.first_name : 'незнакомец'}!`)
         await ctx.replyWithHTML('Что вы хотите сделать?', Markup.inlineKeyboard(
         [
                 [Markup.button.callback('Настроить профиль', 'btn_1'), Markup.button.callback('Пока что ничего', 'btn_2')]
