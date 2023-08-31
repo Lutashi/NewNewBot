@@ -12,7 +12,7 @@ bot.command('settings', async (ctx) =>  {
     try{
     await ctx.replyWithHTML('<b>Настройки</b>', Markup.inlineKeyboard(
     [
-            [Markup.button.callback('Customize Profile', 'btn_1'), Markup.button.callback('Я гей', 'btn_2')]
+            [Markup.button.callback('Customize Profile', 'btn_1'), Markup.button.callback('Nothing yet', 'btn_2')]
     ]
 
 ))
