@@ -46,11 +46,6 @@ addActionBot('btn_1', false, text.text)
 addActionBot('btn_2', false, text.text2)
 
 
-// bot.onReplyToMessage(async (ctx) => {
-//     const name = ctx;
-//     await bot.reply(`Hello ${name}!`);
-// });
-
 
 
 bot.launch();
