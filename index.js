@@ -6,47 +6,80 @@ require('dotenv').config()
 const text = require('./const')
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
-bot.start((ctx) => ctx.reply(`Привет, ${ctx.message.from.first_name ? ctx.message.from.first_name : 'незнакомец'}!`))
+
+
+bot.start(async (ctx) => {
+    ctx.reply(`Здравствуйте, ${ctx.message.from.first_name ? ctx.message.from.first_name : 'незнакомец'}!`)
+    try{
+        await ctx.replyWithHTML('Что вы хотите сделать?', Markup.inlineKeyboard(
+        [
+                [Markup.button.callback('Настроить профиль', 'btn_1'), Markup.button.callback('Пока что ничего', 'btn_2')]
+        ]
+        
+    ))
+    } catch(e){
+        console.error(e)
+    }
+    
+    
+})
 bot.help((ctx) => ctx.reply(text.commands))
 bot.command('settings', async (ctx) =>  {
     try{
-    await ctx.replyWithHTML('<b>Настройки</b>', Markup.inlineKeyboard(
-    [
-            [Markup.button.callback('Customize Profile', 'btn_1'), Markup.button.callback('Nothing yet', 'btn_2')]
-    ]
-
-))
-} catch(e){
-    console.error(e)
-}
-});
-function addActionBot(name, src, text){
-    bot.action(name, async (ctx) => {
+        await ctx.replyWithHTML('Что вы хотите сделать?', Markup.inlineKeyboard(
+        [
+                [Markup.button.callback('Настроить профиль', 'btn_1'), Markup.button.callback('Пока что ничего', 'btn_2')]
+        ]
         
-        try {
-            await ctx.answerCbQuery()
-            if(src !== false){
-                await ctx.replyWithPhoto({
-                    source: src
-                })
+    ))
+    } catch(e){
+        console.error(e)
+    }})
+let replySaid = false
+bot.action('btn_1', async (ctx) => {
+        
+    try {
+        await ctx.answerCbQuery()
+        await ctx.replyWithHTML('Как вас зовут?', {
+            disable_web_page_preview: true
+        })
+        bot.on("message", async ctx => {
+            if(!replySaid){
+                replySaid = true
+                await ctx.replyWithHTML(`${ctx.update.message.text} ваше имя, да?`, Markup.inlineKeyboard(
+                    [
+                            [Markup.button.callback('Да', 'btn_3'), Markup.button.callback('Нет', 'btn_4')]
+                    ]
+                    
+                ))
             }
-            await ctx.replyWithHTML(text, {
-                disable_web_page_preview: true
-            })
             
-            
-        } catch(e){
-            console.error(e)
+        });
+        
+        
+    } catch(e){
+        console.error(e)
+    }
+    
+})
+bot.action('btn_4', async (ctx) => {
+    replySaid = false
+    await ctx.replyWithHTML('Как вас зовут?', {
+        disable_web_page_preview: true
+    })
+    bot.on("message", async ctx => {
+        if(!replySaid){
+            replySaid = true
+            await ctx.replyWithHTML(`${ctx.update.message.text} ваше имя, да?`, Markup.inlineKeyboard(
+                [
+                        [Markup.button.callback('Да', 'btn_3'), Markup.button.callback('Нет', 'btn_4')]
+                ]
+                
+            ))
         }
         
-    })
-}
-
-addActionBot('btn_1', false, text.text)
-addActionBot('btn_2', false, text.text2)
-
-
-
+    });
+})
 
 bot.launch();
 
